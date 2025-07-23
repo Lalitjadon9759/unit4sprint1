@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>React SPA</title>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .navbar {
+      display: flex;
+      gap: 20px;
+      background-color: #333;
+      padding: 10px;
+    }
+    .nav-link {
+      color: white;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .nav-link.active {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+    .page-content {
+      padding: 20px;
+      font-size: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function App() {
+      const [activePage, setActivePage] = useState('Home');
+
+      const renderContent = () => {
+        switch (activePage) {
+          case 'Home':
+            return <div style={{ color: 'green' }}>Welcome to Home</div>;
+          case 'About':
+            return <div style={{ color: 'blue' }}>About Us</div>;
+          case 'Contact':
+            return <div style={{ color: 'orange' }}>Contact Us</div>;
+          default:
+            return <div>Page not found</div>;
+        }
+      };
+
+      const navLinks = ['Home', 'About', 'Contact'];
+
+      return (
+        <div>
+          <nav className="navbar">
+            {navLinks.map((page) => (
+              <span
+                key={page}
+                className={`nav-link ${activePage === page ? 'active' : ''}`}
+                onClick={() => setActivePage(page)}
+              >
+                {page}
+              </span>
+            ))}
+          </nav>
+          <div className="page-content">{renderContent()}</div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
