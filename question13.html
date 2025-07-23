@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Virtual DOM vs Traditional DOM</title>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    button { margin: 10px 0; padding: 8px 14px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1 id="title">Welcome</h1>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function App() {
+      const [reactCount, setReactCount] = useState(0);
+      const [reactTitle, setReactTitle] = useState("Welcome");
+      const [vanillaCount, setVanillaCount] = useState(0);
+
+      // Handle Vanilla JS button
+      const handleVanillaClick = () => {
+        const titleElement = document.getElementById("title");
+        const newTitle = "Updated by Vanilla JS (" + (vanillaCount + 1) + ")";
+        titleElement.textContent = newTitle;
+
+        setVanillaCount(vanillaCount + 1);
+      };
+
+      // Handle React button
+      const handleReactClick = () => {
+        setReactTitle("Updated by React (" + (reactCount + 1) + ")");
+        setReactCount(reactCount + 1);
+      };
+
+      return (
+        <div>
+          <button onClick={handleVanillaClick}>Change Title (Vanilla JS)</button>
+          <p>Vanilla JS DOM Updates: {vanillaCount}</p>
+
+          <button onClick={handleReactClick}>Change Title (React)</button>
+          <p>React DOM Updates: {reactCount}</p>
+
+          {/* React Title (Virtual DOM) - separate from #title */}
+          <h2>{reactTitle}</h2>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
