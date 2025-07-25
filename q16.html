@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>React Dynamic List</title>
+
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function ProductsComponent({ name, price, image }) {
+      return (
+        <div style={{
+          width: "200px",
+          height: "300px",
+          backgroundColor: "olive",
+          margin: "10px",
+          padding: "10px",
+          color: "white",
+          borderRadius: "8px"
+        }}>
+          <img
+            src={image}
+            alt="Image missing"
+            style={{ width: "100%", height: "150px", objectFit: "cover", borderRadius: "6px" }}
+          />
+          <h3>{name}</h3>
+          <h3>₹{price}</h3>
+        </div>
+      );
+    }
+
+    function App() {
+      const [name, setName] = useState("Fan");
+      const [price, setPrice] = useState("1500");
+      const [image, setImage] = useState("https://via.placeholder.com/150");
+
+      const [products, setProducts] = useState([]);
+
+      function addProduct() {
+        const newProduct = {
+          name,
+          price,
+          image
+        };
+        setProducts([...products, newProduct]); 
+        setName("");
+        setPrice("");
+        setImage("");
+      }
+
+      return (
+        <div style={{ backgroundColor: "red", padding: "20px", minHeight: "100vh", color: "white" }}>
+          <h2>Add a Product</h2>
+          <input
+            type="text"
+            placeholder="Enter product name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={{ display: "block", margin: "10px 0", padding: "5px" }}
+          />
+          <input
+            type="text"
+            placeholder="Enter product price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            style={{ display: "block", margin: "10px 0", padding: "5px" }}
+          />
+          <input
+            type="text"
+            placeholder="Enter image URL"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            style={{ display: "block", margin: "10px 0", padding: "5px" }}
+          />
+          <button onClick={addProduct} style={{ padding: "8px 16px", cursor: "pointer" }}>Add Product</button>
+
+          <div style={{ display: "flex", flexWrap: "wrap", marginTop: "20px" }}>
+            {products.map((product, index) => (
+              <ProductsComponent
+                key={index}
+                name={product.name}
+                price={product.price}
+                image={product.image}
+              />
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>

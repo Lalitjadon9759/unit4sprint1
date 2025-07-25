@@ -1,0 +1,77 @@
+!<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>React Dynamic List</title>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+ 
+  <script type="text/babel">
+    function Navbar(){
+        return(
+        < div style={{marginLeft:"50px",height:"150px", width:"1000px",background:"olive", padding:"10px"}}>
+            <span><h2>The right plan for<br/><h2 style={{color:"red",float:"left", height:"50px", width:"30%"}}>Your Business</h2></h2></span>
+            <span><p>Lorem ipsum dolor sit amet consectetur adipisicing
+                 elit. Ad eos omnis veniam, voluptate culpa quia minima
+                  hic error deserunt fuga fugiat beatae ipsam natus,
+                   explicabo quas. Eligendi obcaecati minima hic!</p></span>
+        </div>
+        )
+    }
+  
+  function Card({starter, lorem, rupee, btn}){
+        return (
+            <div style={{height: "auto", width: "1000px", background: "blue", marginLeft: "50px", marginTop: "10px", color: "white", padding: "10px", display: "flex", justifyContent: "space-between"}}>
+                <h2 style={{width: "25%"}}>{starter}</h2>
+                <p style={{width: "25%"}}>{lorem}</p>
+                <h1 style={{width: "25%"}}>{rupee}</h1>
+                <span style={{width: "25%"}}>{btn}</span>
+            </div>
+        )
+    }
+
+    let App = () => {
+        let cardData = [
+            {
+                start: "starter",
+                lorem: "lorem ipsum lorem ipsum",
+                rupee: "free",
+                btn: "getstarted"
+            },
+            {
+                start: "lorem ipusum",
+                lorem: "lorem ipsum lorem ipsum",
+                rupee: "32",
+                btn: "getstarted"
+            },
+            {
+                start: "lorem ipsum",
+                lorem: "lorem ipsum lorem ipsum",
+                rupee: "50",
+                btn: "getstarted"
+            }
+        ]
+
+        return (
+            <div>
+                <Navbar/>
+                <div>
+                    {cardData.map((value, index) => (
+                        <Card key={index} starter={value.start} lorem={value.lorem} rupee={value.rupee} btn={value.btn} />
+                    ))}
+                </div>
+            </div>
+        )
+    }
+
+    let root=ReactDOM.createRoot(document.getElementById("root"))
+    root.render(<App/>)
+  </script>
+</body>
+</html>

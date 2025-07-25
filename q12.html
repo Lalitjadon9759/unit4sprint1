@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Color Toggle Button</title>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.22.5/babel.min.js"></script>
+</head>
+<body>
+  <div id="root">hello world</div>
+
+    <script type="text/babel">
+        function Card({title,children}){
+            return (
+                <div style={styles.card}>
+                    <h1>{title}</h1>
+                    <div>{children}</div>
+                </div>
+            )
+        }
+        const styles = {
+          card: {
+          border: '1px solid #ccc',
+          borderRadius: '8px',
+          padding: '16px',
+          marginBottom: '16px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+          maxWidth: '400px'
+        }
+       };
+        
+        function App(){
+           
+            return(
+                <div>
+                 <div><Card title="card1">children1</Card></div>
+                 <div><Card title="card2">children 2</Card></div>
+                 <div><Card title="card3">children3</Card></div>
+               </div>
+            )
+        }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
