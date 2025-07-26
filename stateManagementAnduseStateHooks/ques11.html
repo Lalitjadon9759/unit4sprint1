@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Todo List App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    input {
+      padding: 8px;
+      margin-right: 10px;
+    }
+    button {
+      margin-left: 5px;
+      padding: 6px 10px;
+    }
+    li {
+      margin: 10px 0;
+    }
+    .completed {
+      text-decoration: line-through;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    const { useState } = React;
+
+    function TodoList() {
+      const [tasks, setTasks] = useState([]);
+      const [input, setInput] = useState('');
+
+      const addTask = () => {
+        if (input.trim() === "") return;
+        setTasks([...tasks, { text: input, completed: false }]);
+        setInput('');
+      };
+
+      const toggleComplete = (index) => {
+        const newTasks = [...tasks];
+        newTasks[index].completed = !newTasks[index].completed;
+        setTasks(newTasks);
+      };
+
+      const deleteTask = (index) => {
+        const newTasks = tasks.filter((_, i) => i !== index);
+        setTasks(newTasks);
+      };
+
+      return (
+        <div>
+          <h2>Todo List</h2>
+          <input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Add new task"
+          />
+          <button onClick={addTask}>Add Task</button>
+          <ul>
+            {tasks.map((task, i) => (
+              <li key={i}>
+                <span
+                  onClick={() => toggleComplete(i)}
+                  className={task.completed ? "completed" : ""}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {task.text}
+                </span>
+                <button onClick={() => deleteTask(i)}>Delete</button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<TodoList />);
+  </script>
+</body>
+</html>
