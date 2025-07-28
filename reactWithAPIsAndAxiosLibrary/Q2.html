@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>fetch data by axios method</title>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <style>
+    .card {
+      border: 1px solid #ccc;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 5px;
+      width: 300px;
+    }
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function ProductCard({ value }) {
+      return (
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {value.map(product => (
+            <div key={product.id} className="card">
+              <h3>{product.title}</h3>
+              <img src={product.image} alt={product.title} />
+              <p>Price: ${product.price}</p>
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    function App() {
+      const [datas, setData] = useState([]);
+      const [error, setError] = useState("");
+      const [loading, setLoading] = useState(false);
+
+      async function loadProduct() {
+        setLoading(true);
+        setError("");
+        try {
+          const response = await axios.get("https://fakestoreapi.com/products");
+          setData(response.data);
+        } catch (err) {
+          setError("Something went wrong while fetching data.");
+        }
+        setLoading(false);
+      }
+
+      return (
+        <div>
+          <h1>Product List</h1>
+          <button onClick={loadProduct}>Fetch Products</button>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {loading && <p>Loading...</p>}
+          {!loading && !error && <ProductCard value={datas} />}
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>

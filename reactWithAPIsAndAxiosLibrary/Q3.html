@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Meme Explorer (useState Only)</title>
+
+  <!-- React + ReactDOM -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+
+  <!-- Babel -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <style>
+    body.light {
+      background: #fff;
+      color: #000;
+    }
+    body.dark {
+      background: #111;
+      color: #fff;
+    }
+    .meme-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .meme-card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      width: 200px;
+      background: #f0f0f0;
+    }
+    .dark .meme-card {
+      background: #333;
+      border-color: #444;
+    }
+    img {
+      width: 100%;
+    }
+    .controls {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body class="light">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    function App() {
+      const [memes, setMemes] = useState([]);
+      const [filtered, setFiltered] = useState([]);
+      const [search, setSearch] = useState("");
+      const [sort, setSort] = useState("");
+      const [filter, setFilter] = useState("");
+      const [loading, setLoading] = useState(false);
+      const [error, setError] = useState("");
+      const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+      const fetchMemes = async () => {
+        setLoading(true);
+        setError("");
+        try {
+          const res = await axios.get("https://api.imgflip.com/get_memes");
+          setMemes(res.data.data.memes);
+          setFiltered(res.data.data.memes);
+        } catch (err) {
+          setError("Failed to fetch memes.");
+        }
+        setLoading(false);
+      };
+
+      const applyAllFilters = () => {
+        let result = [...memes];
+
+        if (search.trim()) {
+          result = result.filter(meme =>
+            meme.name.toLowerCase().includes(search.toLowerCase())
+          );
+        }
+
+        if (filter === "width") {
+          result = result.filter(m => m.width > 500);
+        } else if (filter === "height") {
+          result = result.filter(m => m.height > 500);
+        }
+
+        if (sort === "name") {
+          result.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sort === "width") {
+          result.sort((a, b) => b.width - a.width);
+        }
+
+        setFiltered(result);
+      };
+
+      const toggleTheme = () => {
+        const newTheme = theme === "light" ? "dark" : "light";
+        setTheme(newTheme);
+        document.body.className = newTheme;
+        localStorage.setItem("theme", newTheme);
+      };
+
+      const resetAll = () => {
+        setSearch("");
+        setSort("");
+        setFilter("");
+        setFiltered(memes);
+      };
+
+      return (
+        <div>
+          <h1>Meme Explorer</h1>
+          <div className="controls">
+            <button onClick={fetchMemes}>Load Memes</button>
+            <input
+              type="text"
+              placeholder="Search by name"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <select value={sort} onChange={(e) => setSort(e.target.value)}>
+              <option value="">Sort</option>
+              <option value="name">By Name</option>
+              <option value="width">By Width</option>
+            </select>
+            <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+              <option value="">Filter</option>
+              <option value="width">Width > 500</option>
+              <option value="height">Height > 500</option>
+            </select>
+            <button onClick={applyAllFilters}>Apply</button>
+            <button onClick={resetAll}>Reset</button>
+            <button onClick={toggleTheme}
+            >Toggle {theme === "light" ? "Dark" : "Light"} Mode</button>
+          </div>
+
+          {loading && <p>Loading memes...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {!loading && !error && filtered.length === 0 && <p>No memes found.</p>}
+
+          <div className="meme-grid">
+            {filtered.map((meme) => (
+              <div className="meme-card" key={meme.id}>
+                <img src={meme.url} alt={meme.name} />
+                <p>{meme.name}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root"));
+    root.render(<App />);
+  </script>
+</body>
+</html>
